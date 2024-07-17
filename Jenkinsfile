@@ -33,9 +33,17 @@
                     docker.withRegistry('https://105784472353.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:aws-credentials') {
                     app.push("latest")
                     }
-                }
+		}
             }
     	}
     
+   	stage('Kubernetes Deployment of ASG Bugg Web Application') {
+	   steps {
+	      withKubeConfig([credentialsId: 'kubelogin']) {
+		  sh('kubectl delete all --all -n devsecops')
+		  sh ('kubectl apply -f deployment.yaml --namespace=devsecops')
+    			}
+		}
+	}
     }
-}
+}		
